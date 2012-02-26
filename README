@@ -1,1 +1,15 @@
-Canvas
+Usage
+
+--- html
+<div name="canvas1" class="canvas"></div>
+
+--- JavaScript
+$('.canvas').drawable()
+
+--- DefaultOption
+lineColor: "#000000"
+lineWidth: 3
+lineCap: 'round'
+lineJoin: 'round'
+saveImage: true
+saveInterval: 1000
