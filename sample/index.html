@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drawable</title>
+  <script src="./jquery.min.js" type="text/javascript"></script>
+  <script src="../jquery.drawable.js" type="text/javascript"></script>
+
+<style type="text/css">
+#box{
+  width: 200px;
+  height: 100px;
+  margin: 10px;
+}
+#box2{
+  margin: 20px;
+  padding: 20px;
+  border: solid 1px black;
+}
+
+</style>
+<script language="javascript">
+$(document).ready(function(){
+  $('.draw').drawable({
+    lineColor: 'red',
+    lineWidth: 10,
+  });
+});
+</script>
+</head>
+
+<body>
+<div id="box" class="draw" name="draw1">test</div>
+<div id="box2" class="draw" name="draw2">
+  <span class="draw">test2</span>
+</div>
+
+</body>
+</html>
