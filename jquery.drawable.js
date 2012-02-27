@@ -33,14 +33,14 @@
         this.mDown = false;
 
         var that = this;
-        this.jq.on('mousedown', function(e){
-          return that.drawStart(e);
+        this.jq.on('mousedown touchstart', function(e){
+          return that.drawStart(e, event);
         });
-        this.jq.on('mousemove', function(e){
-          that.drawMove(e);
+        this.jq.on('mousemove touchmove', function(e){
+          that.drawMove(e, event);
         });
-        this.jq.on('mouseup mouseleave', function(e){
-          that.drawEnd(e);
+        this.jq.on('mouseup mouseleave touchend', function(e){
+          that.drawEnd(e, event);
         });
       }
 
@@ -54,39 +54,37 @@
         return ctx;
       };
 
-      Canvas.prototype.drawStart = function(e) {
+      Canvas.prototype.drawStart = function(e, event) {
         e.preventDefault();
         this.resetSaveTimer();
         this.mDown = true;
-        var x = e.pageX - this.jq.offset().left;
-        var y = e.pageY - this.jq.offset().top;
+        offset = this.offsetPosition(e, event);
 
         this.ctx.beginPath();
-        this.ctx.arc(x, y, this.ctx.lineWidth / 2.0, 0, Math.PI*2, false);
+        this.ctx.arc(offset.x, offset.y, this.ctx.lineWidth / 2.0, 0, Math.PI*2, false);
         this.ctx.fill();
         this.ctx.closePath();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x, y);
+        this.ctx.moveTo(offset.x, offset.y);
 
         return false;
       };
 
-      Canvas.prototype.drawMove = function(e) {
+      Canvas.prototype.drawMove = function(e, event) {
         if(this.mDown === false)
           return;
-        x = e.pageX - this.jq.offset().left;
-        y = e.pageY - this.jq.offset().top;
+        offset = this.offsetPosition(e, event);
 
-        this.ctx.lineTo(x, y);
+        this.ctx.lineTo(offset.x, offset.y);
         this.ctx.stroke();
         this.ctx.closePath();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x, y);
+        this.ctx.moveTo(offset.x, offset.y);
       }
 
-      Canvas.prototype.drawEnd = function(e) {
+      Canvas.prototype.drawEnd = function(e, event) {
         if(this.mDown === false)
           return;
         this.mDown = false;
@@ -95,6 +93,13 @@
         this.ctx.closePath();
 
         this.startSaveTimer();
+      }
+
+      Canvas.prototype.offsetPosition = function(e, event){
+        var x = (e.pageX || event.touches[0].pageX) - this.jq.offset().left;
+        var y = (e.pageY || event.touches[0].pageY) - this.jq.offset().top;
+
+        return {x: x, y: y};
       }
 
       Canvas.prototype.loadSavedImage = function(){
