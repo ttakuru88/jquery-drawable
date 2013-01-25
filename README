@@ -13,3 +13,4 @@ lineCap: 'round'
 lineJoin: 'round'
 saveImage: true
 saveInterval: 1000
+retina: true

@@ -6,7 +6,8 @@
       lineCap: 'round',
       lineJoin: 'round',
       saveImage: true,
-      saveInterval: 1000
+      saveInterval: 1000,
+      retina: true
     }
     var options = $.extend(defaults, config);
 
@@ -15,14 +16,15 @@
         this.jq = $(elem);
         this.saveTimer = null;
         this.name = this.jq.attr('name');
+        this.retina_scale = (window.devicePixelRatio > 1 && options.retina == true) ? 2 : 1
 
-        var height = this.jq.outerHeight();
-        var width = this.jq.outerWidth();
+        var height = this.jq.outerHeight() * this.retina_scale;
+        var width = this.jq.outerWidth() * this.retina_scale;
 
         this.canvas = $("<canvas>").attr('width', width).attr('height', height).css({
           position: 'absolute',
-          width: width,
-          height: height,
+          width: width / this.retina_scale,
+          height: height / this.retina_scale,
           left: this.jq.offset().left,
           top: this.jq.offset().top
         });
@@ -48,7 +50,7 @@
         var ctx = canvas[0].getContext('2d');
         ctx.lineCap = defaults.lineCap;
         ctx.lineJoin = defaults.lineJoin;
-        ctx.lineWidth = defaults.lineWidth;
+        ctx.lineWidth = defaults.lineWidth * this.retina_scale;
         ctx.fillStyle = defaults.lineColor;
         ctx.strokeStyle = defaults.lineColor;
         return ctx;
@@ -96,8 +98,8 @@
       }
 
       Canvas.prototype.offsetPosition = function(e, event){
-        var x = (e.pageX || event.touches[0].pageX) - this.jq.offset().left;
-        var y = (e.pageY || event.touches[0].pageY) - this.jq.offset().top;
+        var x = ((e.pageX || event.touches[0].pageX) - this.jq.offset().left) * this.retina_scale;
+        var y = ((e.pageY || event.touches[0].pageY) - this.jq.offset().top) * this.retina_scale;
 
         return {x: x, y: y};
       }
